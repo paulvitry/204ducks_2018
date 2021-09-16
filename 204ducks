@@ -1,0 +1,88 @@
+#! /usr/bin/python3
+
+import sys
+import fileinput
+from math import *
+import time
+
+def print_usage():
+    print("USAGE")
+    print("\t./204duck a\n")
+    print("DESCRIPTION")
+    print("\ta\tconstant")
+
+
+def back_in_n_minutes(a, t):
+    r = -a * exp(-t) - (4 - 3 * a) / 2 * exp(-2 * t) - (2 * a - 4) / 4 * exp(-4 * t)
+    return r
+
+def percentage_came_back(percentage, a):
+    i = 1.0
+    while (1):
+        if (back_in_n_minutes(a, i / 60) - back_in_n_minutes(a, 0) >= percentage):
+            return (float(i))
+        i+=0.001
+
+def display_in_minute(m):
+
+    minute = m / 60
+    dixieme = m % 60 / 10
+    centieme = m % 10
+    print("%dm %d%ds" % (minute, dixieme, centieme))
+
+# def standard_deviation(a):
+
+
+def average(a):
+    i = 1.0
+    d = 0.0
+    r = 0
+    
+    while (1):
+        if (back_in_n_minutes(a, i / 60) - back_in_n_minutes(a, 0) >= d):
+            d += 0.1
+            r += i
+        if d >= 0.99:
+            break
+        i += 0.1
+
+
+
+def compute_ducks(a):
+    average(a)
+    print("Average return time: %fs" %(a))
+    print("Standard deviation: %f" %(a))
+    print("Time after which 50% of the ducks are back: ", end='')
+    m = percentage_came_back(0.50, a)
+    display_in_minute(m)
+    print("Time after which 99% of the ducks are back: ", end='')
+    m = percentage_came_back(0.99, a)
+    display_in_minute(m)
+    print("Percentage of ducks back after 1 minute: %.1f%%" % ((back_in_n_minutes(a, 1) - back_in_n_minutes(a, 0)) * 100))
+    print("Percentage of ducks back after 2 minutes: %.1f%%" % ((back_in_n_minutes(a, 2) - back_in_n_minutes(a, 0)) * 100))
+
+def str_valid(s):
+    i = 0
+
+    while (i < len(s)):
+        if (s[i] != '.' and (s[i] < '0' or s[i] > '9')):
+            exit(84)
+        i += 1
+
+
+def main():
+    if len(sys.argv) != 2:
+        exit(84)
+    if sys.argv[1] == "-h":
+        print_usage()
+    else:
+        # if sys.argv[1].isdigit() == False:
+        #     exit(84)
+        str_valid(sys.argv[1])
+        if float(sys.argv[1]) < 0 or float(sys.argv[1]) > 2.5:
+            print(float(sys.argv[1]))
+            exit(84)
+        compute_ducks(float(sys.argv[1]))
+
+if __name__ == "__main__":
+    main()
